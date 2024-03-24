@@ -9,8 +9,9 @@ RUN wget https://raw.githubusercontent.com/petals-infra/chat.petals.dev/main/req
 
 RUN apt-get update \
     && apt-get install -y git \
-    && pip install -r /app/requirements.txt
-	
-RUN git clone https://github.com/petals-infra/chat.petals.dev.git
+    && pip install -r /app/requirements.txt \
+    && rm requirements.txt
+
+RUN git clone https://github.com/petals-infra/chat.petals.dev.git .
 
 CMD ["sh", "-c", "flask run --host=0.0.0.0 --port=5000"]
