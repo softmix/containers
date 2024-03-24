@@ -11,4 +11,7 @@ RUN pip install --no-cache-dir -r ./requirements.txt --upgrade pip && rm require
 
 RUN git clone https://github.com/petals-infra/health.petals.dev.git /app
 
+COPY config.patch .
+RUN git apply config.patch
+
 CMD flask run --host=0.0.0.0 --port=31331
