@@ -1,0 +1,23 @@
+diff --git a/litellm/llms/prompt_templates/factory.py b/litellm/llms/prompt_templates/factory.py
+index 5bb5e1d..2d8764f 100644
+--- a/litellm/llms/prompt_templates/factory.py
++++ b/litellm/llms/prompt_templates/factory.py
+@@ -233,6 +233,8 @@ def hf_chat_template(model: str, messages: list, chat_template: Optional[Any] =
+             if response.status_code == 200:
+                 # Parse the JSON data
+                 tokenizer_config = json.loads(response.content)
++                del tokenizer_config["chat_template"]
++                print("Tokenizer config updated: 'chat_template' removed")
+                 return {"status": "success", "tokenizer": tokenizer_config}
+             else:
+                 return {"status": "failure"}
+@@ -1036,6 +1038,9 @@ def prompt_factory(
+ ):
+     original_model_name = model
+     model = model.lower()
++    if "miqu" in model:
++        print(f"Using Mistral instruct for model: {model}")
++        return mistral_instruct_pt(messages=messages)
+     if custom_llm_provider == "ollama":
+         return ollama_pt(model=model, messages=messages)
+     elif custom_llm_provider == "anthropic":
