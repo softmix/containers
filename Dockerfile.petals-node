@@ -1,1 +1,1 @@
-FROM learningathome/petals:latest
+FROM learningathome/petals:main
