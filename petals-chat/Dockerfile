@@ -20,8 +20,8 @@ RUN git clone https://github.com/petals-infra/chat.petals.dev.git /app && \
     git config --global user.name "deadhead" && \
     for PR in 50 51 54 56; do git fetch origin pull/$PR/head:pr$PR && git merge --no-ff pr$PR -m "Merge PR #$PR"; done
 
-RUN wget https://github.com/petals-infra/chat.petals.dev/compare/main...softmix:chat.petals.dev:models-from-dht.diff -O models-from-dht.diff && \
-    git apply models-from-dht.diff && \
-    rm models-from-dht.diff
+RUN wget https://github.com/petals-infra/chat.petals.dev/compare/main...softmix:chat.petals.dev:custom-model.diff -O custom-model.diff && \
+    git apply custom-model.diff && \
+    rm custom-model.diff
 
 CMD ["sh", "-c", "python3 openai_api.py --host=0.0.0.0 --port=5000"]
