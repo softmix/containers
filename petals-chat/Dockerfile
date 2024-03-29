@@ -12,12 +12,16 @@ RUN apt-get update \
     && pip install -r /app/requirements.txt \
     && rm requirements.txt
 
-RUN git clone https://github.com/petals-infra/chat.petals.dev.git /app && git fetch origin pull/50/head:pr50 && git checkout pr50
-
+# This is in a PR that hasn't been accepted yet
 RUN python -m pip install fschat
 
-COPY *.patch /app/
-RUN git apply config.patch && rm config.patch
-RUN git apply utils.patch && rm utils.patch
+RUN git clone https://github.com/petals-infra/chat.petals.dev.git /app && \
+    git config --global user.email "<>" && \
+    git config --global user.name "deadhead" && \
+    for PR in 50 51 54 56; do git fetch origin pull/$PR/head:pr$PR && git merge --no-ff pr$PR -m "Merge PR #$PR"; done
+
+RUN wget https://github.com/petals-infra/chat.petals.dev/compare/main...softmix:chat.petals.dev:models-from-dht.diff -O models-from-dht.diff && \
+    git apply models-from-dht.diff && \
+    rm models-from-dht.diff
 
 CMD ["sh", "-c", "python3 openai_api.py --host=0.0.0.0 --port=5000"]
