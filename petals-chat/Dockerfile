@@ -20,6 +20,4 @@ COPY *.patch /app/
 RUN git apply config.patch && rm config.patch
 RUN git apply utils.patch && rm utils.patch
 
-
-
 CMD ["sh", "-c", "python3 openai_api.py --host=0.0.0.0 --port=5000"]
