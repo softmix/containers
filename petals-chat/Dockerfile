@@ -12,6 +12,14 @@ RUN apt-get update \
     && pip install -r /app/requirements.txt \
     && rm requirements.txt
 
-RUN git clone https://github.com/petals-infra/chat.petals.dev.git /app
+RUN git clone https://github.com/petals-infra/chat.petals.dev.git /app && git fetch origin pull/50/head:pr50 && git checkout pr50
 
-CMD ["sh", "-c", "flask run --host=0.0.0.0 --port=5000"]
+RUN python -m pip install fschat
+
+COPY *.patch /app/
+RUN git apply config.patch && rm config.patch
+RUN git apply utils.patch && rm utils.patch
+
+
+
+CMD ["sh", "-c", "python3 openai_api.py --host=0.0.0.0 --port=5000"]
